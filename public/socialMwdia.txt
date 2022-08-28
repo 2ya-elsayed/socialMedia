@@ -1,0 +1,122 @@
+CREATE DATABASE `socialMedia`;
+USE `socialMedia`;
+CREATE TABLE `socialMedia`.`users`(
+	`id` bigint(20) AUTO_INCREMENT PRIMARY KEY,
+    `firstName` varchar(20),
+    `middleName` varchar(20),
+    `userName` varchar(20),
+    `mobile` varchar(20),
+    `email` varchar(20),
+    `passwordHash` varchar(20),
+    `registeredDate` datetime,
+    `lastLogin` datetime,
+    `intro` tinytext,
+    `profile` text
+);
+CREATE TABLE `socialMedia`.`userMassage`(
+	`id` bigint(20) AUTO_INCREMENT PRIMARY KEY,
+    `sourceId` bigint(20),
+    `targetId` bigint(20),
+    `massage` tinytext,
+    `createrAt` datetime,
+    `updatedAt` datetime,
+    FOREIGN KEY (`sourceId`) REFERENCES users(`id`),
+    FOREIGN KEY (`targetId`) REFERENCES users(`id`)
+);
+CREATE TABLE `socialMedia`.`userFollower`(
+	`id` bigint(20) AUTO_INCREMENT PRIMARY KEY,
+    `sourceId` bigint(20),
+    `targetId` bigint(20),
+    `TYPE` SMALLINT(6),
+    `createrAt` datetime,
+    `updatedAt` datetime,
+    FOREIGN KEY (`sourceId`) REFERENCES users(`id`),
+    FOREIGN KEY (`targetId`) REFERENCES users(`id`)
+);
+CREATE TABLE `socialMedia`.`userFriend`(
+	`id` bigint(20) AUTO_INCREMENT PRIMARY KEY,
+    `sourceId` bigint(20),
+    `targetId` bigint(20),
+    `type` SMALLINT(6),
+    `stats` SMALLINT(6),
+    `createrAt` datetime,
+    `updatedAt` datetime,
+    `notes` text,
+    FOREIGN KEY (`sourceId`) REFERENCES users(`id`),
+    FOREIGN KEY (`targetId`) REFERENCES users(`id`)
+);
+CREATE TABLE `socialMedia`.`userPost`(
+	`id` bigint(20) AUTO_INCREMENT PRIMARY KEY,
+    `userId` bigint(20),
+    `senderId` bigint(20),
+    `massage` SMALLINT(6),
+    `createrAt` datetime,
+    `updatedAt` datetime,
+    FOREIGN KEY (`userId`) REFERENCES users(`id`),
+    FOREIGN KEY (`senderId`) REFERENCES users(`id`)
+);
+CREATE TABLE `socialMedia`.`myGroup`(
+	`id` bigint(20) AUTO_INCREMENT PRIMARY KEY,
+    `createdBy` bigint(20),
+    `updatedBy` bigint(20),
+    `title` varchar(20),
+    `metaTitle` varchar(100),
+    `slug` varchar(100),
+    `sammury` tinytext,
+    `status` SMALLINT(6),
+    `createrAt` datetime,
+    `updatedAt` datetime,
+    `profileText` text,
+    `content` text,
+    FOREIGN KEY (`createdBy`) REFERENCES users(`id`),
+    FOREIGN KEY (`updatedBy`) REFERENCES users(`id`)
+);
+CREATE TABLE `socialMedia`.`groupPost`(
+	`id` bigint(20) AUTO_INCREMENT PRIMARY KEY,
+    `groupId` bigint(20),
+    `userId` bigint(50),
+    `massage` tinytext,
+    `createrAt` datetime,
+    `updatedAt` datetime,
+    FOREIGN KEY (`groupId`) REFERENCES myGroup(`id`),
+    FOREIGN KEY (`userId`) REFERENCES users(`id`)
+);
+CREATE TABLE `socialMedia`.`groupMassage`(
+	`id` bigint(20) AUTO_INCREMENT PRIMARY KEY,
+    `groupId` bigint(20),
+    `userId` bigint(50),
+    `massage` tinytext,
+    `createrAt` datetime,
+    `updatedAt` datetime,
+    FOREIGN KEY (`groupId`) REFERENCES myGroup(`id`),
+    FOREIGN KEY (`userId`) REFERENCES users(`id`)
+);
+CREATE TABLE `socialMedia`.`groupMeta`(
+	`id` bigint(20) AUTO_INCREMENT PRIMARY KEY,
+    `groupId` bigint(20),
+    `key` bigint(50),
+    `content` text,
+    FOREIGN KEY (`groupId`) REFERENCES myGroup(`id`)
+);
+CREATE TABLE `socialMedia`.`groupFollower`(
+	`id` bigint(20) AUTO_INCREMENT PRIMARY KEY,
+    `groupId` bigint(20),
+    `userId` bigint(50),
+    `type` text,
+    `createrAt` datetime,
+    `updatedAt` datetime,
+    FOREIGN KEY (`groupId`) REFERENCES myGroup(`id`),
+    FOREIGN KEY (`userId`) REFERENCES users(`id`)
+);
+CREATE TABLE `socialMedia`.`groupMember`(
+	`id` bigint(20) AUTO_INCREMENT PRIMARY KEY,
+    `groupId` bigint(20),
+    `userId` bigint(50),
+    `type` SMALLINT(6),
+    `status` SMALLINT(6),
+    `createrAt` datetime,
+    `updatedAt` datetime,
+    `notes` text,
+    FOREIGN KEY (`groupId`) REFERENCES myGroup(`id`),
+    FOREIGN KEY (`userId`) REFERENCES users(`id`)
+);
